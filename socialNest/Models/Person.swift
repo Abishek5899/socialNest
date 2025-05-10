@@ -9,9 +9,9 @@ import Foundation
 
 struct Person: Identifiable {
     let id = UUID()
-    let name: String
-    let age: Int
-    let tags: [String]
-    let bio: String
-    let imageName: String
+    var name: String
+    var age: Int
+    var tags: [String]
+    var bio: String
+    var imageName: String
 }
