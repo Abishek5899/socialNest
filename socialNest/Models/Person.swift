@@ -14,4 +14,7 @@ struct Person: Identifiable {
     var tags: [String]
     var bio: String
     var imageName: String
+    var connectionIntent: String
+    var location: String
+    var contactNumber: String
 }

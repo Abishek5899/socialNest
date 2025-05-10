@@ -10,7 +10,7 @@ import SwiftUI
 struct YourProfileView: View {
     @State private var isEditing = false
     @State var user: Person
-
+    
     var body: some View {
         ScrollView {
             VStack(spacing: 16) {
@@ -22,15 +22,15 @@ struct YourProfileView: View {
                     .overlay(Circle().stroke(Color.gray, lineWidth: 2))
                     .shadow(radius: 4)
                     .padding(.top, 20)
-
+                
                 Text(user.name)
                     .font(.title)
                     .fontWeight(.bold)
-
+                
                 Text("Age: \(user.age)")
                     .font(.subheadline)
                     .foregroundColor(.gray)
-
+                
                 HStack {
                     ForEach(user.tags, id: \.self) { tag in
                         Text("#\(tag)")
@@ -41,11 +41,36 @@ struct YourProfileView: View {
                             .cornerRadius(8)
                     }
                 }
-
+                
                 Text(user.bio)
                     .padding()
                     .frame(maxWidth: .infinity, alignment: .leading)
-
+                //Divider()
+                
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Looking to connect with")
+                        .font(.headline)
+                    Text(user.connectionIntent)
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                    
+                    //Divider()
+                    
+                    Text("Location")
+                        .font(.headline)
+                    Text(user.location)
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                    
+                    Text("Contact")
+                        .font(.headline)
+                        .padding(.top, 4)
+                    Text(user.contactNumber)
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                }
+                .padding(.horizontal)
+                
                 Spacer()
             }
             .padding(.horizontal)

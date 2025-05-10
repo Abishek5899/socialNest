@@ -16,12 +16,12 @@ struct PeopleListView: View {
                 NavigationLink(destination: ProfileView(person: person)) {
                     HStack {
                         Image(person.imageName)
-                             .resizable()
-                             .scaledToFill()
-                             .frame(width: 50, height: 50)
-                             .clipShape(Circle())
-                             .overlay(Circle().stroke(Color.gray.opacity(0.3), lineWidth: 1))
-                             .shadow(radius: 2)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 50, height: 50)
+                            .clipShape(Circle())
+                            .overlay(Circle().stroke(Color.gray.opacity(0.3), lineWidth: 1))
+                            .shadow(radius: 2)
                         VStack(alignment: .leading) {
                             Text(person.name).bold()
                             Text("\(person.age) • \(person.tags.joined(separator: ", "))")
