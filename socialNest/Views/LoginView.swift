@@ -17,42 +17,63 @@ struct LoginView: View {
     @State private var showSignup = false
 
     var body: some View {
-        VStack{
-            Text("Welcome to SocialNest!").font(.title).padding(.vertical)
-            NavigationStack {
-                Form {
-                    TextField("Name", text: $name)
-                    TextField("Contact Number", text: $contactNumber)
-                        .keyboardType(.phonePad)
-                    if !error.isEmpty {
-                        Text(error).foregroundColor(.red)
-                    }
-                    Button("Login") {
-                        if let user = peopleViewModel.people.first(where: { $0.name == name && $0.contactNumber == contactNumber }) {
-                            loggedInUser = user
-                            error = ""
-                            showMainView = true
-                        } else {
-                            error = "User not found or incorrect credentials."
-                        }
-                    }
-                    .buttonStyle(.borderedProminent)
-                    Button("Sign Up") {
-                        showSignup = true
-                    }
-                    .buttonStyle(.bordered)
-                }
-                .navigationDestination(isPresented: $showMainView) {
-                    if let user = loggedInUser {
-                        ContentView(currentUser: user, peopleViewModel: peopleViewModel)
+        
+        NavigationStack {
+            ZStack {
+                Color(red: 0.363, green: 0.373, blue: 0.303).ignoresSafeArea()
+                ScrollView {
+                    VStack{
+                        Image("socialNestLogo")
+                            .resizable()
+                            .scaledToFit()
+                            .padding(.vertical, 50)
+                        LoginForm
                     }
                 }
-                .navigationDestination(isPresented: $showSignup) {
-                    SignUpView(peopleViewModel: peopleViewModel)
-                }
-                .navigationTitle("Login")
             }
+            
+            .navigationDestination(isPresented: $showMainView) {
+                if let user = loggedInUser {
+                    ContentView(currentUser: user, peopleViewModel: peopleViewModel)
+                }
+            }
+            .navigationDestination(isPresented: $showSignup) {
+                SignUpView(peopleViewModel: peopleViewModel)
+            }
+            .navigationTitle("Login")
         }
+    }
+    
+    
+    private var LoginForm: some View{
+        VStack{
+            TextField("Name", text: $name)
+            TextField("Contact Number", text: $contactNumber)
+                .keyboardType(.phonePad)
+                .padding(.vertical, 10)
+            if !error.isEmpty {
+                Text(error).foregroundColor(.red)
+            }
+            Button("Login") {
+                if let user = peopleViewModel.people.first(where: { $0.name == name && $0.contactNumber == contactNumber }) {
+                    loggedInUser = user
+                    error = ""
+                    showMainView = true
+                } else {
+                    error = "User not found or incorrect credentials."
+                }
+            }
+            .buttonStyle(.borderedProminent)
+            .padding(.top, 20)
+            Button("Sign Up") {
+                showSignup = true
+            }
+            .buttonStyle(.bordered)
+        }
+        .padding(.all, 20)
+        .background(.ultraThinMaterial)
+        .cornerRadius(20)
+        .padding(.all, 8)
     }
 }
 
