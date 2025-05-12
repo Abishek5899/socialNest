@@ -9,9 +9,11 @@ import SwiftUI
 
 @main
 struct socialNestApp: App {
+    @StateObject var peopleViewModel = PeopleViewModel()
+
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            LoginView(peopleViewModel: peopleViewModel)
         }
     }
 }
