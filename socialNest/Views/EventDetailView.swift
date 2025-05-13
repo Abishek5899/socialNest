@@ -2,30 +2,31 @@ import SwiftUI
 
 struct EventDetailView: View {
     let event: Event
-    @ObservedObject var peopleViewModel: PeopleViewModel
-    
-    @State private var showConfirmation = false
-    @State private var showAlreadyBookedAlert = false
-    @State private var attendees: [Person]
-    @State private var ticketBooked: Bool
+    @ObservedObject var peopleViewModel: PeopleViewModel        // The shared people view model (provides attendee info)
 
+    @State private var showConfirmation = false         // Controls display of the booking confirmation alert
+    @State private var showAlreadyBookedAlert = false   // Controls display of the "already booked" alert
+    @State private var attendees: [Person]              // The list of people attending the event
+    @State private var ticketBooked: Bool               // Whether the current user has booked a ticket for this event
 
     // Simulated logged-in user
     let currentUser = Person(
-            name: "You",
-            age: 26,
-            tags: ["Developer", "Gamer", "TeaLover"],
-            bio: "SwiftUI enthusiast building cool apps. Always up for side quests — digital or real.",
-            imageName: "yourProfile",
-            connectionIntent: "...",
-            location: "Melbourne",
-            contactNumber: "+61 400 123 456"
-        )
+        name: "You",
+        age: 26,
+        tags: ["Developer", "Gamer", "TeaLover"],
+        bio:
+            "SwiftUI enthusiast building cool apps. Always up for side quests — digital or real.",
+        imageName: "yourProfile",
+        connectionIntent: "...",
+        location: "Melbourne",
+        contactNumber: "+61 400 123 456"
+    )
 
-    init(event: Event, peopleViewModel: PeopleViewModel) {
+    init(event: Event, peopleViewModel: PeopleViewModel) {      // Initializes the view with the event and people model.
         self.event = event
         self.peopleViewModel = peopleViewModel
-        let wasBooked = UserDefaults.standard.bool(forKey: "booked_\(event.id.uuidString)")
+        let wasBooked = UserDefaults.standard.bool(             // Check if this event was already booked by the user
+            forKey: "booked_\(event.id.uuidString)")
         _ticketBooked = State(initialValue: wasBooked)
 
         let shuffledPeople = peopleViewModel.people.shuffled()
@@ -34,17 +35,19 @@ struct EventDetailView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            ScrollView {
+            ScrollView {        // Scrollable area for event details and attendee list
                 VStack(alignment: .leading, spacing: 16) {
-                    Image(event.imageName)
+                    Image("Image")
                         .resizable()
                         .scaledToFit()
                         .cornerRadius(10)
 
                     Text(event.title).font(.largeTitle).bold()
 
-                    Group {
-                        Text("Date: \(event.date.formatted(date: .long, time: .shortened))")
+                    Group {         // Event metadata
+                        Text(
+                            "Date: \(event.date.formatted(date: .long, time: .shortened))"
+                        )
                         Text("Location: \(event.location)")
                         Text("Organized by: \(event.organizer)")
                         Text("Category: \(event.category)")
@@ -53,12 +56,13 @@ struct EventDetailView: View {
                     .font(.subheadline)
                     .foregroundColor(.gray)
 
-                    Text(event.description).padding(.top)
+                    Text(event.description).padding(.top)       // Event description
 
                     Text("Attendees").font(.title2).bold().padding(.top)
 
-                    ForEach(attendees) { person in
-                        NavigationLink(destination: ProfileView(person: person)) {
+                    ForEach(attendees) { person in          // List of attendees with navigation to their profiles
+                        NavigationLink(destination: ProfileView(person: person))
+                        {
                             HStack {
                                 Image(person.imageName)
                                     .resizable()
@@ -70,15 +74,14 @@ struct EventDetailView: View {
                         }
                     }
 
-
-                    Spacer(minLength: 80) // Avoids last list item being under the button
+                    Spacer(minLength: 80)  // Avoids last list item being under the button
                 }
                 .padding()
             }
 
             Divider()
 
-            HStack(alignment: .bottom) {
+            HStack(alignment: .bottom) {            // Bottom bar with attendee count and booking button
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Attendees")
                         .font(.caption)
@@ -93,11 +96,11 @@ struct EventDetailView: View {
 
                 Spacer()
 
-                Button(action: {
-                    if attendees.contains(currentUser) {
+                Button(action: {            // Book Ticket button
+                    if attendees.contains(currentUser) {        // If the user is already in the attendee list, show alert
                         showAlreadyBookedAlert = true
                     } else {
-                        attendees.append(currentUser)
+                        attendees.append(currentUser)           // Add user to attendees, mark as booked,
                         ticketBooked = true
                         setEventBooked(event.id)
                         showConfirmation = true
@@ -116,16 +119,18 @@ struct EventDetailView: View {
             .shadow(color: Color.black.opacity(0.1), radius: 4, y: -2)
 
         }
-        .alert("Ticket Booked!", isPresented: $showConfirmation) {
+        .alert("Ticket Booked!", isPresented: $showConfirmation) {      // Booking confirmation alert
             Button("OK") { showConfirmation = false }
         }
-        .alert("You already booked the ticket!", isPresented: $showAlreadyBookedAlert) {
+        .alert(                                                         // Already booked alert
+            "You already booked the ticket!",
+            isPresented: $showAlreadyBookedAlert
+        ) {
             Button("OK") { showAlreadyBookedAlert = false }
         }
     }
-    func setEventBooked(_ id: UUID) {
+    func setEventBooked(_ id: UUID) {           // Persists that the event was booked by the user
         UserDefaults.standard.set(true, forKey: "booked_\(id.uuidString)")
     }
-	
 
 }

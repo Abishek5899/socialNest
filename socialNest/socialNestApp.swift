@@ -13,7 +13,7 @@ struct socialNestApp: App {
 
     var body: some Scene {
         WindowGroup {
-            LoginView(peopleViewModel: peopleViewModel)
+            LoginView(peopleViewModel: peopleViewModel)  //going to the first view of the app
         }
     }
 }

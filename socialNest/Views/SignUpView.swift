@@ -2,13 +2,13 @@
 //  SignUpView.swift
 //  socialNest
 //
-//  Created by Janhavi Jagtap on 13/5/2025.
+//  Created by Janhavi Jagtap.
 //
 import SwiftUI
 
-struct SignUpView: View {
-    @ObservedObject var peopleViewModel: PeopleViewModel
-    @Environment(\.dismiss) var dismiss
+struct SignUpView: View {       //This view allows users to sign up by entering their profile details. On successful sign up, the new user is added to the PeopleViewModel.
+    @ObservedObject var peopleViewModel: PeopleViewModel        //The shared people view model (where new users are added)
+    @Environment(\.dismiss) var dismiss             //Used to dismiss the sign up view after successful registration
 
     @State private var name = ""
     @State private var age = ""
@@ -19,11 +19,11 @@ struct SignUpView: View {
     @State private var location = ""
     @State private var contactNumber = ""
     @State private var error = ""
-    @State private var success = false
+    @State private var success = false      // Controls the display of the success alert
 
     var body: some View {
         Form {
-            Section(header: Text("Basic Info")) {
+            Section(header: Text("Basic Info")) {       // Section for basic info: name, age, contact number
                 TextField("Name", text: $name)
                 TextField("Age", text: $age)
                     .keyboardType(.numberPad)
@@ -42,35 +42,42 @@ struct SignUpView: View {
             Section(header: Text("Location")) {
                 TextField("Location", text: $location)
             }
-            if !error.isEmpty {
+            if !error.isEmpty {                     //Show error message if any validation fails
                 Text(error).foregroundColor(.red)
             }
             Button("Sign Up") {
-                guard !name.isEmpty, let ageInt = Int(age), !contactNumber.isEmpty else {
+                guard !name.isEmpty, let ageInt = Int(age),
+                    !contactNumber.isEmpty
+                else {
                     error = "Please fill in all required fields."
                     return
                 }
-                // Check for duplicate
-                if peopleViewModel.people.contains(where: { $0.name == name && $0.contactNumber == contactNumber }) {
+                
+                if peopleViewModel.people.contains(where: {         //Check for duplicate
+                    $0.name == name && $0.contactNumber == contactNumber
+                }) {
                     error = "User already exists."
                     return
                 }
-                let newPerson = Person(
+                let newPerson = Person(         //Create a new Person from the entered details
                     name: name,
                     age: ageInt,
-                    tags: tags.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces) },
+                    tags: tags.split(separator: ",").map {
+                        $0.trimmingCharacters(in: .whitespaces)
+                    },
                     bio: bio.isEmpty ? "No bio yet." : bio,
                     imageName: imageName,
-                    connectionIntent: connectionIntent.isEmpty ? "Not specified." : connectionIntent,
+                    connectionIntent: connectionIntent.isEmpty
+                        ? "Not specified." : connectionIntent,
                     location: location.isEmpty ? "Unknown" : location,
                     contactNumber: contactNumber
                 )
-                peopleViewModel.people.append(newPerson)
-                success = true
+                peopleViewModel.people.append(newPerson)            //Add the new user to the people view model
+                success = true              //Show success alert
                 error = ""
             }
             .buttonStyle(.borderedProminent)
-            .alert("Sign Up Successful!", isPresented: $success) {
+            .alert("Sign Up Successful!", isPresented: $success) {      //Success alert, dismisses the view when OK is tapped
                 Button("OK") { dismiss() }
             }
         }

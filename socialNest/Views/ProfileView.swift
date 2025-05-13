@@ -2,16 +2,14 @@
 //  ProfileView.swift
 //  socialNest
 //
-//  Created by Grown Nomad on 10/5/2025.
+//  Created by Grown Nomad.
 //
 
 import SwiftUI
 
-import SwiftUI
+struct ProfileView: View {          //Displays a detailed profile view for a given person.
+    let person: Person              //The person whose profile is being displayed.
 
-struct ProfileView: View {
-    let person: Person
-    
     var body: some View {
         ScrollView {
             VStack(spacing: 16) {
@@ -24,16 +22,16 @@ struct ProfileView: View {
                     .overlay(Circle().stroke(Color.gray, lineWidth: 2))
                     .shadow(radius: 4)
                     .padding(.top, 20)
-                
+
                 // Name and Age
                 Text(person.name)
                     .font(.title)
                     .fontWeight(.bold)
-                
+
                 Text("Age: \(person.age)")
                     .font(.subheadline)
                     .foregroundColor(.gray)
-                
+
                 // Tags
                 HStack {
                     ForEach(person.tags, id: \.self) { tag in
@@ -45,43 +43,40 @@ struct ProfileView: View {
                             .cornerRadius(8)
                     }
                 }
-                
+
                 // Bio
                 Text(person.bio)
                     .padding()
                     .frame(maxWidth: .infinity, alignment: .leading)
-                
+
                 //Divider()
-                
+
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Looking to connect with")
                         .font(.headline)
                     Text(person.connectionIntent)
                         .font(.subheadline)
-                    //.foregroundColor(.gray)
-                    
+
                     Spacer()
-                    
+
                     Text("Location")
                         .font(.headline)
                     Text(person.location)
                         .font(.subheadline)
-                    //.foregroundColor(.gray)
-                    
+
                     Text("Contact")
                         .font(.headline)
                         .padding(.top, 4)
                     Text(person.contactNumber)
                         .font(.subheadline)
-                    //.foregroundColor(.gray)
                 }
                 .padding(.horizontal)
-                
+
                 Spacer()
             }
             .padding(.horizontal)
         }
-        .navigationTitle("Profile")
+        .navigationTitle("Profile")             // Set the navigation bar title and style
         .navigationBarTitleDisplayMode(.inline)
     }
 }

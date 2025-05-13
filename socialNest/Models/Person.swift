@@ -2,12 +2,12 @@
 //  Person.swift
 //  socialNest
 //
-//  Created by Grown Nomad on 10/5/2025.
+//  Created by Grown Nomad.
 //
 
 import Foundation
 
-struct Person: Identifiable,Equatable,Codable {
+struct Person: Identifiable, Equatable, Codable {
     var id = UUID()
     var name: String
     var age: Int
