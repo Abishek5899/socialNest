@@ -7,8 +7,8 @@
 
 import Foundation
 
-struct Person: Identifiable {
-    let id = UUID()
+struct Person: Identifiable,Equatable,Codable {
+    var id = UUID()
     var name: String
     var age: Int
     var tags: [String]

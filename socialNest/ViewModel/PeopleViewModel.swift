@@ -6,15 +6,17 @@
 //
 
 import Foundation
+
 class PeopleViewModel: ObservableObject {
     @Published var people: [Person] = []
 
     init() {
-        loadSampleData()
+        loadPeople()
     }
 
-    private func loadSampleData() {
-        people = [
+    // Loads both hardcoded and saved (UserDefaults) users
+    private func loadPeople() {
+        var loadedPeople = [
             Person(name: "Laurie", age: 45, tags: ["Wellness", "LuxuryTravel", "Mystery"],
                    bio: "A retreat host with a serene exterior and a knack for intuitive healing. Laurie believes in the power of stillness, scented oils, and uncovering what lies beneath the surface. Known for curating exclusive experiences — and quietly observing everyone around her.",
                    imageName: "laurie",connectionIntent: "People who value peace, self-reflection, and can enjoy deep conversations over herbal tea.", location: "Byron Bay, Australia (GMT+10)",
@@ -56,6 +58,30 @@ class PeopleViewModel: ObservableObject {
                    
                )
         ]
+        
+        if let data = UserDefaults.standard.data(forKey: "savedPeople"),
+           let savedPeople = try? JSONDecoder().decode([Person].self, from: data) {
+            for person in savedPeople {
+                if !loadedPeople.contains(where: { $0.name == person.name && $0.contactNumber == person.contactNumber }) {
+                    loadedPeople.append(person)
+                }
+            }
+        }
 
+        self.people = loadedPeople
+    }
+
+    // Call this after a new signup to persist users
+    func savePeople() {
+        if let data = try? JSONEncoder().encode(people) {
+            UserDefaults.standard.set(data, forKey: "savedPeople")
+        }
+    }
+
+    // Call this after signup
+    func addPerson(_ person: Person) {
+        people.append(person)
+        savePeople()
     }
 }
+
